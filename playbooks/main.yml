@@ -1,0 +1,13 @@
+---
+- name: Run install webserver playbook
+  import_playbook: webserver.yml
+
+- name: Run install cache playbook
+  import_playbook: cache.yml
+
+- name: Run install_docker_compose playbook
+  import_playbook: docker.yml
+
+- name: Run docker application
+  import_playbook: application.yml
+

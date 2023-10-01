@@ -1,0 +1,39 @@
+---
+- name: Update The Operating System
+  yum:
+    update_cache: yes
+
+- name: Install system dependencies
+  dnf:
+    name:
+    - python3
+    - augeas-libs
+  become: true
+
+- name: Check if file exists
+  stat:
+    path: /opt/certbot/
+  register: certbot_check
+
+- name: Set up a Python virtual environment
+  command: "{{ item }}"
+  with_items:
+    - python3 -m venv /opt/certbot/
+    - /opt/certbot/bin/pip install --upgrade pip
+  become: true
+  when: not certbot_check.stat.exists
+
+- name: Install Certbot
+  command: /opt/certbot/bin/pip install certbot certbot-nginx
+  become: true
+  when: not certbot_check.stat.exists
+
+- name: Prepare the Certbot command
+  file:
+    src: /opt/certbot/bin/certbot
+    dest: /usr/bin/certbot
+    state: link
+  become: true
+
+- import_tasks: certificate.yml
+  when: domain_name is defined

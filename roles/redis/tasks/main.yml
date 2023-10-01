@@ -1,0 +1,38 @@
+---
+- name: Update The Operating System
+  yum:
+    update_cache: yes
+
+- name: Install Redis
+  dnf:
+    name: redis6
+    state: present
+  become: true
+
+- name: Enable Redis service
+  systemd:
+    name: redis6
+    daemon_reload: yes
+    enabled: yes
+    state: started
+
+- name: Start Redis Service 
+  service:
+    name: redis6
+    state: started
+    enabled: yes
+  become: true
+
+- name: Generate redis password
+  shell: echo "{{ app_name }}" | sha1sum | awk '{print $1}'
+  register: password_generate
+  run_once: true
+
+- set_fact: 
+    redis_password={{ password_generate.stdout }}
+
+- name: Update redis configuration file
+  template:
+    src: redis.conf.j2
+    dest: /etc/redis.conf
+  notify: Restart Redis

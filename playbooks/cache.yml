@@ -1,0 +1,7 @@
+---
+- name: Cache install
+  hosts: jpxpress
+  become: true
+
+  roles:
+    - redis

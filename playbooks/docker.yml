@@ -1,0 +1,7 @@
+---
+- name: Docker install
+  hosts: jpxpress
+  become: true
+
+  roles:
+    - docker

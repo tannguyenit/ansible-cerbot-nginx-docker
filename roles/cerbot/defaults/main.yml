@@ -1,0 +1,5 @@
+---
+cerbot_domain_name: "{{ server_name }}"
+cerbot_server_root: "{{ server_root }}"
+cerbot_letsencrypt_email: "myaccount@letsencrypt.org"
+cerbot_letsencrypt_staging: false
